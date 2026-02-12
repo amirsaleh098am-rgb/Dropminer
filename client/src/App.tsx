@@ -9,6 +9,8 @@ import WithdrawPage from "@/pages/Withdraw";
 import HistoryPage from "@/pages/History";
 import ReferralPage from "@/pages/Referral";
 import { BottomNav } from "@/components/BottomNav";
+import { useAuth } from "@/hooks/use-auth";
+import { Loader2 } from "lucide-react";
 
 function Router() {
   return (
@@ -25,11 +27,25 @@ function Router() {
   );
 }
 
+function AuthGate() {
+  const { token, isLoading } = useAuth();
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return <Router />;
+}
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Router />
+        <AuthGate />
         <Toaster />
       </TooltipProvider>
     </QueryClientProvider>
